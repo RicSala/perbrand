@@ -123,12 +123,14 @@ export type PostTemplateCardProps = {
     template: Pure<PostTemplate>;
     onDelete?: () => void;
     className?: string;
+    onEditClick?: () => void;
 };
 
 export const SelectedPostTemplateCard = ({
     template,
     onDelete,
     className,
+    onEditClick,
 }: PostTemplateCardProps) => {
     return (
         <div
@@ -140,7 +142,7 @@ export const SelectedPostTemplateCard = ({
             <p className='font-semibold'>{template.name}</p>
             <p className='w-full line-clamp-2'>{template.content}</p>
             <div className='flex justify-between'>
-                <Button variant={'ghost'} type='button'>
+                <Button variant={'ghost'} type='button' onClick={onEditClick}>
                     <Pen className='mr-2 h-5 w-5' />
                     Editar
                 </Button>

@@ -48,7 +48,7 @@ export const ToggleableCollapsible = ({
                     {enabled && <ChevronsUpDown size={20} className='ml-2' />}
                 </div>
             </CollapsibleTrigger>
-            <CollapsibleContent>{children}</CollapsibleContent>
+            <CollapsibleContent className='py-4'>{children}</CollapsibleContent>
         </Collapsible>
     );
 };

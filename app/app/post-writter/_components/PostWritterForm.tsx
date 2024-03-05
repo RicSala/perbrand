@@ -28,6 +28,7 @@ import { PostWritterContext } from './PostWritterProvider';
 import { CharCounter } from '@/components/shared/CharCounter';
 import { RecordButton } from './RecordButton';
 import Spinner from '@/components/icons/spinner';
+import { useSearchParams } from 'next/navigation';
 
 const MAX_LENGTH = 700;
 const MIN_LENGTH = 50;
@@ -60,10 +61,13 @@ export function PostWritterForm({ className }: PostWritterFormProps) {
         postRequest: { description, templateId, toneId },
     } = useContext(PostWritterContext);
 
+    const searchParams = useSearchParams();
+    const urlDescription = searchParams.get('description');
+
     const form = useForm({
         resolver: zodResolver(CustomFormSchema),
         defaultValues: {
-            description,
+            description: urlDescription || description,
             toneId,
             templateId,
         },
@@ -197,6 +201,9 @@ export function PostWritterForm({ className }: PostWritterFormProps) {
                                                     onDelete={
                                                         onDeselectPostTemplate
                                                     }
+                                                    onEditClick={() => {
+                                                        setIsDialogOpen(true);
+                                                    }}
                                                 />
                                             ) : null}
                                             <Dialog

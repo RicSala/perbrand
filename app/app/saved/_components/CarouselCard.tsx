@@ -41,7 +41,9 @@ const CarouselActions = ({ carousel }: CarouselCardProps) => {
     return (
         <div className='flex gap-2 pt-[var(--outter-padding)] relative'>
             <ButtonWithTooltip
-                icon={Trash2}
+                icon={<Trash2 />}
+                className='flex-1 rounded-full bg-muted text-primary/50
+                hover:bg-primary/10'
                 label='Borrar post'
                 onClick={async () => {
                     await deleteCarousel(carousel.id);
@@ -50,7 +52,9 @@ const CarouselActions = ({ carousel }: CarouselCardProps) => {
                 }}
             />
             <ButtonWithTooltip
-                icon={Edit}
+                icon={<Edit />}
+                className='flex-1 rounded-full bg-muted text-primary/50
+                hover:bg-primary/10'
                 label='Editar carrusel'
                 onClick={() => router.push(`/app/carrousel/${carousel.id}`)}
             />

@@ -96,16 +96,22 @@ export type TLinkedinPost = Pure<Prisma.LinkedinPostGetPayload<{}>>;
 
 export type TCarousel = Pure<Prisma.CarouselGetPayload<{}>>;
 
+export type TIdeas = Pure<Prisma.IdeaGetPayload<{}>>;
+
 export type TSlide = Pure<Prisma.SlideGetPayload<{}>>;
+
+export type TBrand = Pure<Prisma.BrandGetPayload<{}>>;
+
+export type TFeedback = '' | 'yes' | 'no' | 'partially';
 
 type TAspectRatioMap = typeof ASPECT_RATIOS_MAP;
 export type TAspectRatioEnum = keyof TAspectRatioMap;
 export type TAspectRatioLabel = TAspectRatioMap[TAspectRatioEnum];
 
-export type TFontNames = keyof typeof fontsMap;
+export type TFontName = keyof typeof fontsMap;
 
 export type TColorPalette = Prisma.ColorPaletteGetPayload<{}>;
 
-export type TFontPallete = Prisma.FontPaletteGetPayload<{}>;
+export type TFontPalette = Prisma.FontPaletteGetPayload<{}>;
 
 export type TDecorationId = keyof typeof decorationMap;

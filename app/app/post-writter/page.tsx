@@ -4,7 +4,19 @@ import { PostWritterForm } from './_components/PostWritterForm';
 import { PostWritterResult } from './_components/GeneratedPost';
 import { PostWritterContextProvider } from './_components/PostWritterProvider';
 
-export default function PostWritterPage() {
+type PostWritterPageProps = {
+    params: { slug: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default function PostWritterPage({
+    params,
+    searchParams,
+}: PostWritterPageProps) {
+    const description = decodeURIComponent(
+        searchParams['description'] as string
+    );
+
     return (
         <>
             <Heading

@@ -10,12 +10,15 @@ export async function POST(request: NextRequest) {
 
     console.log('received');
     console.log(body);
+    const bodyObjectFormattedString = Object.keys(body)
+        .map((key) => `<strong>${key}</strong>: ${body[key]}<br>`)
+        .join('');
 
     await sendEmail(
         'ricardo@grouz.io',
         'New Feedback received',
-        `Rating: ${body.value}<br>Message: ${body.message}<br>`,
-        `<strong>Rating</strong>: ${body.value}<br><strong>Message</strong>: ${body.message}<br>`,
+        `${bodyObjectFormattedString}`,
+        `${bodyObjectFormattedString}`,
         'ricardo@ricardo.com'
     );
 

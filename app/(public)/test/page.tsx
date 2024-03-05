@@ -1,3 +1,4 @@
+'use client';
 import { LoginForm } from '@/components/auth/login-form';
 import { RegisterForm } from '@/components/auth/register-form';
 import { Button } from '@/components/ui/button';
@@ -17,13 +18,33 @@ import { LoginButton } from '@/components/auth/login-button';
 import { SlidingElements } from '@/components/marketing/sliding-elements';
 import { Explanation } from '@/components/shared/explanation';
 import { handwritten, secondaryFont } from '@/config/fonts';
+import { Dropzone } from '@/components/shared/dropzone/Dropzone';
+import { useState } from 'react';
+import {
+    TExtendedFile,
+    Thumbnails,
+} from '@/components/shared/dropzone/Thumbnails';
 
-export default async function Home() {
-    const session = await auth();
+export default function Home() {
+    // const session = await auth();
+    const [files, setFiles] = useState<TExtendedFile[]>([]);
+
+    const onDrop = (acceptedFiles: File[]) => {
+        setFiles(() => {
+            console.log('dropped');
+            return acceptedFiles.map((file) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                })
+            );
+        });
+    };
 
     return (
         <div className={`gap flex flex-col items-center justify-between`}>
-            <h1
+            <Dropzone onDrop={onDrop} maxFiles={2} className='h-48 w-48' />
+            <Thumbnails files={files} classNamesThumbnails='h-24 w-24' />
+            {/* <h1
                 className={`text-6xl font-extrabold font-grotesqu relative ${secondaryFont.className}`}
             >
                 This is just a test
@@ -107,7 +128,7 @@ export default async function Home() {
             <p>
                 Un texto con aclaración
                 <Explanation message='This is a quite awesome explanation' />{' '}
-            </p>
+            </p> */}
         </div>
     );
 }

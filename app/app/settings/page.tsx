@@ -3,8 +3,15 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AccountSettings } from './_components/AccountSettings';
 import { auth } from '@/auth';
+import { IASettings } from './_components/IASettings';
+import { BrandKitsSettings } from './_components/BrandKitsSettings';
+import { getUserBrandKits } from '@/app/_actions/settings-actions';
+import { getSession } from 'next-auth/react';
 
 export default async function IdeasPage() {
+    const session = await auth();
+
+    const userBrandKits = await getUserBrandKits(session!.user.id);
     return (
         <>
             <Heading
@@ -31,8 +38,12 @@ export default async function IdeasPage() {
                     </TabsContent>
                     <TabsContent value='password'></TabsContent>
                     <TabsContent value='team'></TabsContent>
-                    <TabsContent value='ai'></TabsContent>
-                    <TabsContent value='brands'></TabsContent>
+                    <TabsContent value='ai'>
+                        <IASettings />
+                    </TabsContent>
+                    <TabsContent value='brands'>
+                        <BrandKitsSettings userBrandKits={userBrandKits} />
+                    </TabsContent>
                 </Tabs>
             </div>
         </>

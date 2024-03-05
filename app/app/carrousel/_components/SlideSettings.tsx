@@ -16,9 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { TSlide, TStatus } from '@/types/types';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
-import axios from 'axios';
 import { getPexelImages } from '@/app/_actions/writter-actions';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -90,12 +88,6 @@ export function SlideSettings({
                     onCheckedChange={toggleSlideHasTitle}
                 />
                 <Label htmlFor='title'>Título</Label>
-                {/* <ContentEditable
-                    onChange={(e) => editTitle(e.target.value)}
-                    html={slide.title!}
-                    tagName='p'
-                    className='border rounded-md p-2'
-                /> */}
             </div>
             <div>
                 <Switch
@@ -104,11 +96,6 @@ export function SlideSettings({
                     onCheckedChange={toggleSlideHasTagline}
                 />
                 <Label htmlFor='tagline'>Tagline</Label>
-                {/* <Input
-                    id='tagline'
-                    value={slide.tagline!}
-                    onChange={(e) => editTagline(e.target.value)}
-                /> */}
             </div>
             <div>
                 <Label htmlFor='paragraph'>Párrafo 1</Label>
@@ -117,12 +104,6 @@ export function SlideSettings({
                     checked={slide.paragraphs[0].isShown}
                     onCheckedChange={toggleSlideHasParagraph}
                 />
-                {/* <Textarea
-                    id='paragraph'
-                    className='resize-none'
-                    value={slide.description!}
-                    onChange={(e) => editDescription(e.target.value)}
-                /> */}
             </div>
             <div>
                 <Label htmlFor='paragraph'>Etiqueta desliza</Label>
@@ -169,10 +150,6 @@ export function SlideSettings({
                     ))}
                 </div>
             </form>
-            {/* <div>
-                <Label htmlFor='paragraph'>Image to all</Label>
-                <Checkbox checked={slide.image?.isBackground} />
-            </div> */}
 
             <Slider
                 defaultValue={[slide.backgroundImage?.opacity!]}
@@ -184,8 +161,6 @@ export function SlideSettings({
                 max={1}
                 step={0.01}
             />
-
-            {/* <Slider value={slide.backgroundImage?.opacity} min={0} max={100} /> */}
         </div>
     );
 }

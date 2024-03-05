@@ -3,20 +3,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useContext, useState } from 'react';
 import { CarouselContext } from '../ContextProvider';
+import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const AuthorSettings = () => {
     const {
         carousel,
         carousel: {
             author: { name, handle, pictureUrl },
-            settings: { showAuthor },
+            settings: { showAuthor, showName },
         },
         editImage,
         editName,
         editHandle,
         toggleShowAuthor,
+        toggleShowName,
+        toggleShowProfilePic,
+        toggleShowHandle,
+        toggleShowAuthorInFirstOnly,
     } = useContext(CarouselContext);
-    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <ToggleableCollapsible
@@ -33,10 +38,17 @@ export const AuthorSettings = () => {
                     </p>
                 </div>
                 <div className=''>
-                    <Label htmlFor='name'>Nombre</Label>
+                    <div className='flex justify-between items-center'>
+                        <Label htmlFor='name'>Nombre</Label>
+                        <Switch
+                            id='name'
+                            checked={carousel.settings.showName}
+                            onCheckedChange={toggleShowName}
+                        />
+                    </div>
+
                     <Input
                         placeholder='Nombre'
-                        id='name'
                         value={name!}
                         onChange={(event) => {
                             editName(event.target.value);
@@ -44,7 +56,14 @@ export const AuthorSettings = () => {
                     />
                 </div>
                 <div className=''>
-                    <Label htmlFor='profilePic'>Foto de perfil</Label>
+                    <div className='flex justify-between items-center'>
+                        <Label htmlFor='pic'>Foto de perfil</Label>
+                        <Switch
+                            id='pic'
+                            checked={carousel.settings.showProfilePic}
+                            onCheckedChange={toggleShowProfilePic}
+                        />
+                    </div>
                     <Input
                         placeholder='Nombre'
                         id='profilePic'
@@ -55,7 +74,14 @@ export const AuthorSettings = () => {
                     />
                 </div>
                 <div className=''>
-                    <Label htmlFor='handle'>Handle</Label>
+                    <div className='flex justify-between items-center'>
+                        <Label htmlFor='handle'>Handle</Label>
+                        <Switch
+                            id='handle'
+                            checked={carousel.settings.showHandle}
+                            onCheckedChange={toggleShowHandle}
+                        />
+                    </div>{' '}
                     <Input
                         placeholder='Handle'
                         id='handle'
@@ -64,6 +90,15 @@ export const AuthorSettings = () => {
                             editHandle(event.target.value);
                         }}
                     />
+                </div>
+                <div className='flex gap-2 items-center'>
+                    <Checkbox
+                        checked={carousel.settings.showAuthorInFirstOnly}
+                        onCheckedChange={toggleShowAuthorInFirstOnly}
+                    />
+                    <Label className='text-xs font-normal italic'>
+                        Mostrar solo en primera y última página
+                    </Label>
                 </div>
             </div>
         </ToggleableCollapsible>

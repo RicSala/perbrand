@@ -11,12 +11,22 @@ import { fontsMap, handwritten } from '@/config/fonts';
 // Whitelisting the classes:
 type keys = keyof typeof translateClasses;
 const translateClasses = {
-    [100]: '-translate-x-[100%]',
+    0: '-translate-x-[0%]',
+    100: '-translate-x-[100%]',
     200: '-translate-x-[200%]',
     300: '-translate-x-[300%]',
     400: '-translate-x-[400%]',
     500: '-translate-x-[500%]',
     600: '-translate-x-[600%]',
+    700: '-translate-x-[700%]',
+    800: '-translate-x-[800%]',
+    900: '-translate-x-[900%]',
+    1000: '-translate-x-[1000%]',
+    1100: '-translate-x-[1100%]',
+    1200: '-translate-x-[1200%]',
+    1300: '-translate-x-[1300%]',
+    1400: '-translate-x-[1400%]',
+    1500: '-translate-x-[1500%]',
 } as const;
 
 export const CarouselWorkbench = () => {

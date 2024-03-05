@@ -13,7 +13,7 @@ import { CarouselContext } from './ContextProvider';
 import ContentEditable from 'react-contenteditable';
 import { ASPECT_RATIOS_MAP } from './const';
 import { TSlide } from '@/types/types';
-import { Decoration } from './Decoration';
+import { Decoration, decorationMap } from './Decoration';
 import { Background } from './Background';
 import { SlideBanner } from './SlideBanner';
 
@@ -59,6 +59,8 @@ export const Slide = forwardRef<Ref, SlideProps>(
                 ? settings.colorPalette.background
                 : settings.colorPalette.font;
 
+        const accentColor = settings.colorPalette.accent;
+
         const isFirst = slideNumber === 0;
         const isLast = slideNumber === slides.length - 1;
 
@@ -97,13 +99,16 @@ export const Slide = forwardRef<Ref, SlideProps>(
                     opacity={backgroundImage?.opacity}
                 />
                 <Decoration
-                    // @ts-ignore
-                    decorationid={settings.backgroundPattern}
+                    decorationid={
+                        settings.backgroundPattern as keyof typeof decorationMap
+                    }
                     primaryColor={backgroundColor!}
                     secondaryColor={fontColor!}
+                    tertiaryColor={accentColor}
                     even={isEven(slideNumber)}
                     cover={slideNumber === 0}
                     cta={slideNumber === slides.length - 1}
+                    alternateColors={settings.alternateColors}
                 />
                 <SlideContent
                     hasTitle={title.isShown}
@@ -116,7 +121,12 @@ export const Slide = forwardRef<Ref, SlideProps>(
                     backgroundColor={backgroundColor!}
                 />
                 <ProfileBadge
-                    isShown={settings.showAuthor && (isFirst || isLast)}
+                    isShown={
+                        settings.showAuthor &&
+                        (settings.showAuthorInFirstOnly
+                            ? isFirst || isLast
+                            : true)
+                    }
                     profilePictureUrl={author.pictureUrl}
                     handle={author.handle}
                     name={author.name}
@@ -133,6 +143,9 @@ export const Slide = forwardRef<Ref, SlideProps>(
                     swipeLabel={swipeLabel!}
                     style={{
                         display: settings.showSwipeLabel ? 'block' : 'none',
+                        borderRadius: `${settings.labelRoundness}px`,
+                        backgroundColor: settings.colorPalette.accent,
+                        color: settings.colorPalette.font,
                     }}
                 />
                 {!isFirst && !isLast && (
@@ -141,7 +154,7 @@ export const Slide = forwardRef<Ref, SlideProps>(
                 <style>
                     {`
                     .slide b {
-                        color: ${settings.colorPalette.accent};
+                        color: ${accentColor};
                     }
                 `}
                 </style>
@@ -161,7 +174,7 @@ type SwipeLabelProps = {
 const SwipeLabel = ({ swipeLabel, className, style = {} }: SwipeLabelProps) => (
     <div
         className={cn(
-            `p-2 px-4 border rounded-full ml-auto absolute bottom-4 right-4`,
+            `p-2 px-4  rounded-full ml-auto absolute bottom-4 right-4`,
             className
         )}
         style={{
@@ -246,6 +259,20 @@ export const ProfileBadge = ({
     name,
     styles,
 }: ProfileBadgeProps) => {
+    const {
+        carousel: {
+            settings: {
+                showName,
+                showHandle,
+                showProfilePic,
+                showAuthorInFirstOnly,
+            },
+        },
+    } = useContext(CarouselContext);
+
+    const authorName = !showName ? '' : <p className='font-semibold'>{name}</p>;
+    const authorHandle = !showHandle ? '' : <p className=''>{handle}</p>;
+
     return (
         <div
             className='gap-4 items-center absolute bottom-2 left-2'
@@ -254,20 +281,22 @@ export const ProfileBadge = ({
                 ...styles,
             }}
         >
-            <div className='h-[5em] w-[5em] rounded-full relative'>
-                <Image
-                    src={
-                        profilePictureUrl
-                            ? profilePictureUrl
-                            : '/images/placeholders/user.png'
-                    }
-                    fill
-                    alt='placeholder'
-                />
-            </div>
+            {showProfilePic && (
+                <div className='h-[5em] w-[5em] rounded-full relative'>
+                    <Image
+                        src={
+                            profilePictureUrl
+                                ? profilePictureUrl
+                                : '/images/placeholders/user.png'
+                        }
+                        fill
+                        alt='placeholder'
+                    />
+                </div>
+            )}
             <div className='flex flex-col mr-auto'>
-                <p className='font-semibold'>{name}</p>
-                <p className=''>{handle}</p>
+                {authorName}
+                {authorHandle}
             </div>
         </div>
     );
@@ -295,7 +324,7 @@ export const SlideNumber = ({
                 ...styles,
             }}
         >
-            {slideNumber + 1}
+            {slideNumber}
         </div>
     );
 };

@@ -5,39 +5,43 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '../ui/tooltip';
-import { Button } from '../ui/button';
+import { Button, ButtonProps } from '../ui/button';
 import { cn } from '@/lib/utils';
+import { ComponentProps } from 'react';
 
-type ButtonWithTooltipProps = {
+type ButtonWithTooltipCustomProps = {
     label?: string;
     className?: string;
-    icon: LucideIcon;
+    icon: string | JSX.Element;
     onClick?: () => void;
+    children?: React.ReactNode;
 };
 
 export const ButtonWithTooltip = ({
-    icon: Icon,
+    icon,
     className,
     label,
     onClick,
-}: ButtonWithTooltipProps) => {
+    children,
+    ...props
+}: ButtonProps & ButtonWithTooltipCustomProps) => {
     return (
-        <TooltipProvider>
-            <Tooltip delayDuration={100}>
-                <TooltipTrigger asChild>
-                    <Button
-                        onClick={onClick}
-                        className={cn(
-                            `flex-1 rounded-full bg-muted text-primary/50
-                        hover:bg-primary/10`,
-                            className
-                        )}
-                    >
-                        <Icon />
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>{label}</TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <>
+            <TooltipProvider>
+                <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                        <Button
+                            onClick={onClick}
+                            className={cn(``, className)}
+                            {...props}
+                        >
+                            {icon}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{label}</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+            {children}
+        </>
     );
 };

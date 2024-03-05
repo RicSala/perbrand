@@ -6,7 +6,7 @@ import { CarouselContext } from '../ContextProvider';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { TColorPalette, TFontPallete } from '@/types/types';
+import { TBrand, TColorPalette, TFontPalette } from '@/types/types';
 import { FontSelector } from '@/components/shared/FontSelector';
 import { ChevronsUpDown, Save } from 'lucide-react';
 import { upsertCarousel } from '@/app/_actions/writter-actions';
@@ -27,8 +27,20 @@ import { ColorPaletteSelect } from './ColorPaletteSelector';
 import { SizeSelector } from './SizeSelector';
 import { AuthorSettings } from './AuthorSettings';
 import { ColorPalette } from './ColorPalette';
+import { ToggleableCollapsible } from '@/components/shared/ToggleableCollapsible';
+import { Slider } from '@/components/ui/slider';
+import { BrandKitSelector } from './BrandKitSelector';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
-export const CarouselSidebar = () => {
+type CarouselSidebarProps = {
+    brands: TBrand[];
+};
+
+export const CarouselSidebar = ({ brands }: CarouselSidebarProps) => {
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
     return (
@@ -42,20 +54,21 @@ export const CarouselSidebar = () => {
             </div>
             <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
                 <SheetContent side={'left'} className='md:hidden p-0 w-3/4'>
-                    <SideBarContent />
+                    <SideBarContent brands={brands} />
                 </SheetContent>
             </Sheet>
             {/* DESKTOP SIDEBAR */}
-            <SideBarContent className='hidden md:block' />
+            <SideBarContent brands={brands} className='hidden md:block' />
         </>
     );
 };
 
 type SideBarContentProps = {
     className?: string;
+    brands: TBrand[];
 };
 
-export const SideBarContent = ({ className }: SideBarContentProps) => {
+export const SideBarContent = ({ className, brands }: SideBarContentProps) => {
     const {
         carousel,
         carousel: {
@@ -65,6 +78,7 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                 showAuthor,
                 aspectRatio,
                 backgroundPattern,
+                showSwipeLabel,
             },
         },
         setCarouselAspectRatio,
@@ -72,20 +86,50 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
         setFontPalette,
         setDecorationId,
         setColorPalette,
+        editImage,
+        editName,
+        editHandle,
     } = useContext(CarouselContext);
 
     const router = useRouter();
     const [colorsPopOverisOpen, setColorsPopOverisOpen] = useState(false);
-    const [fontPopOverisOpen, setFontPopOverisOpen] = useState(false);
 
     const onSetColorPalette = (colorPalette: TColorPalette) => {
         setColorPalette(colorPalette);
-        setColorsPopOverisOpen(false);
+        // setColorsPopOverisOpen(false);
     };
 
-    const onSetFontPalette = (fontPalette: TFontPallete) => {
-        setFontPalette(fontPalette);
-        setFontPopOverisOpen(false);
+    const onBrandChange = (brandId: string) => {
+        const brand = brands.find((brand) => brand.id === brandId);
+        console.log(brand);
+        if (brand) {
+            setColorPalette(brand.colorPalette);
+            setFontPalette(brand.fontPalette);
+            editImage(brand.imageUrl);
+            editName(brand.name);
+            editHandle(brand.handle);
+        }
+    };
+
+    const setPrimaryFont = (font: string) => {
+        setFontPalette({
+            ...carousel.settings.fontPalette,
+            primary: font,
+        });
+    };
+
+    const setSecondaryFont = (font: string) => {
+        setFontPalette({
+            ...carousel.settings.fontPalette,
+            secondary: font,
+        });
+    };
+
+    const setHandwritingFont = (font: string) => {
+        setFontPalette({
+            ...carousel.settings.fontPalette,
+            handWriting: font,
+        });
     };
 
     return (
@@ -99,6 +143,14 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                     setCarouselAspectRatio={setCarouselAspectRatio}
                 />
                 <TemplateSelector />
+            </div>
+            <Separator className='mt-2 mb-2' />
+            <div className='flex flex-col gap-2'>
+                <h3>Ajustes de marca</h3>
+                <BrandKitSelector
+                    brands={brands}
+                    onBrandChange={onBrandChange}
+                />
             </div>
             <Separator className='mt-2 mb-2' />
             <Popover
@@ -118,7 +170,10 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                 </PopoverTrigger>
                 <PopoverContent>
                     <>
-                        <ColorPaletteSelect onChange={onSetColorPalette} />
+                        <ColorPaletteSelect
+                            colorPalette={carousel.settings.colorPalette}
+                            onChange={onSetColorPalette}
+                        />
                         <div className='flex gap-2 items-center'>
                             <Label htmlFor='name'>Alternar colores</Label>
                             <Switch
@@ -130,41 +185,40 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                 </PopoverContent>
             </Popover>
             <Separator className='mt-2 mb-2' />
-            <Popover
-                open={fontPopOverisOpen}
-                onOpenChange={setFontPopOverisOpen}
-            >
-                <PopoverTrigger className='w-full flex items-center justify-between'>
-                    <div className='cursor-pointer flex gap-2 items-center'>
-                        Fuente{' '}
-                        <div
-                            className='h-6 w-6 rounded-full'
-                            style={{
-                                fontFamily:
-                                    carousel.settings.fontPalette.primary,
-                            }}
-                        >
-                            {carousel.settings.fontPalette.primary}
-                        </div>
+            <Collapsible>
+                <CollapsibleTrigger className='flex justify-between w-full items-center'>
+                    <div className='cursor-pointer flex items-center'>
+                        Fuentes
                     </div>
                     <ChevronsUpDown size={20} className='ml-2' />
-                </PopoverTrigger>
-                <PopoverContent>
-                    <>
-                        <FontSelector
-                            onSelect={(fontName) => {
-                                console.log('fontName', fontName);
-                                onSetFontPalette({
-                                    handWriting: fontName,
-                                    primary: fontName,
-                                    secondary: fontName,
-                                });
-                            }}
-                            selectedFont='Robotto'
-                        />
-                    </>
-                </PopoverContent>
-            </Popover>
+                </CollapsibleTrigger>
+                <CollapsibleContent className='mt-4'>
+                    <div className='flex flex-col gap-4'>
+                        <div className='cursor-pointer flex flex-col items-start'>
+                            Primaria
+                            <FontSelector
+                                font={carousel.settings.fontPalette.primary}
+                                setFontPalette={setPrimaryFont}
+                            />
+                        </div>
+                        <div className='cursor-pointer flex flex-col items-start'>
+                            Secundaria
+                            <FontSelector
+                                font={carousel.settings.fontPalette.secondary}
+                                setFontPalette={setSecondaryFont}
+                            />
+                        </div>
+                        <div className='cursor-pointer flex flex-col items-start'>
+                            Manuscrita
+                            <FontSelector
+                                font={carousel.settings.fontPalette.handWriting}
+                                setFontPalette={setHandwritingFont}
+                            />
+                        </div>
+                    </div>
+                </CollapsibleContent>
+            </Collapsible>
+
             <Separator className='mt-2 mb-2' />
             <AuthorSettings />
             <Separator className='mt-2 mb-2' />
@@ -176,6 +230,8 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                 // @ts-ignore
                 selectedDecoration={backgroundPattern}
             />
+            <Separator className='mt-2 mb-2' />
+            <LabelRoundnessSelector />
             <Separator className='mt-2 mb-2' />
             <div className='flex flex-col justify-between gap-2 mt-auto'>
                 <Button
@@ -192,5 +248,36 @@ export const SideBarContent = ({ className }: SideBarContentProps) => {
                 <DownloadButton />
             </div>
         </div>
+    );
+};
+
+export const LabelRoundnessSelector = () => {
+    const {
+        carousel: {
+            settings: { labelRoundness, showSwipeLabel },
+        },
+        toggleShowSwipeLabel,
+        setLabelRoundness,
+    } = useContext(CarouselContext);
+
+    return (
+        <ToggleableCollapsible
+            enabled={showSwipeLabel}
+            setEnabled={toggleShowSwipeLabel}
+            label='Etiqueta desliza'
+        >
+            <div className='flex gap-2'>
+                <Label>Redondeo</Label>
+                <Slider
+                    min={0}
+                    max={20}
+                    step={0.1}
+                    value={[labelRoundness]}
+                    onValueChange={(value) => {
+                        setLabelRoundness(value[0]);
+                    }}
+                />
+            </div>
+        </ToggleableCollapsible>
     );
 };

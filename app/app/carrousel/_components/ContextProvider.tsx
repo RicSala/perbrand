@@ -1,18 +1,12 @@
 'use client';
 
 import {
-    MutableRefObject,
     RefObject,
     createContext,
-    createRef,
-    use,
     useCallback,
-    useContext,
     useEffect,
-    useRef,
     useState,
 } from 'react';
-import { fakeCarousel } from '@/app/app/carrousel/_components/const';
 import { deepCopy } from '@/lib/utils';
 import { AspectRatio } from '@prisma/client';
 import {
@@ -20,8 +14,7 @@ import {
     TCarousel,
     TColorPalette,
     TDecorationId,
-    TFontPallete,
-    TLinkedinPost,
+    TFontPalette,
 } from '@/types/types';
 
 export type TArrayOfRefs = RefObject<HTMLDivElement>[];
@@ -44,6 +37,7 @@ const INITIAL_STATE = {
     toggleShowCounter: () => {},
     toggleShowSwipeLabel: () => {},
     toggleShowAuthor: () => {},
+    toggleShowDecoration: () => {},
     toggleSlideHasTitle: () => {},
     toggleSlideHasTagline: () => {},
     toggleSlideHasParagraph: () => {},
@@ -52,7 +46,7 @@ const INITIAL_STATE = {
     addSlideToRight: () => {},
     deleteCurrentSlide: () => {},
     setColorPalette: (colors: TColorPalette) => {},
-    setFontPalette: (fonts: TFontPallete) => {},
+    setFontPalette: (fonts: TFontPalette) => {},
     setCarouselAspectRatio: (aspectRatio: TAspectRatioEnum) => {},
     setDecorationId: (decorationId: TDecorationId) => {},
     setBackgroundImage: (
@@ -63,6 +57,11 @@ const INITIAL_STATE = {
             position?: string;
         }
     ) => {},
+    setLabelRoundness: (value: number) => {},
+    toggleShowName: () => {},
+    toggleShowProfilePic: () => {},
+    toggleShowHandle: () => {},
+    toggleShowAuthorInFirstOnly: () => {},
 };
 
 // REVIEW: I think exporting this is causing a full reload of the app.
@@ -128,21 +127,27 @@ export function CarouselContextProvider({
     };
 
     const editProfilePicture = (newImage: string) => {
-        const newCarousel = deepCopy(carousel);
-        newCarousel.author.pictureUrl = newImage;
-        setCarousel(newCarousel);
+        setCarousel((prev) => {
+            const newCarousel = deepCopy(prev);
+            newCarousel.author.pictureUrl = newImage;
+            return newCarousel;
+        });
     };
 
     const editName = (newName: string) => {
-        const newCarousel = deepCopy(carousel);
-        newCarousel.author.name = newName;
-        setCarousel(newCarousel);
+        setCarousel((prev) => {
+            const newCarousel = deepCopy(prev);
+            newCarousel.author.name = newName;
+            return newCarousel;
+        });
     };
 
     const editHandle = (newHandle: string) => {
-        const newCarousel = deepCopy(carousel);
-        newCarousel.author.handle = newHandle;
-        setCarousel(newCarousel);
+        setCarousel((prev) => {
+            const newCarousel = deepCopy(prev);
+            newCarousel.author.handle = newHandle;
+            return newCarousel;
+        });
     };
 
     const setCurrentSlideTo = (newSlide: number) => {
@@ -235,19 +240,25 @@ export function CarouselContextProvider({
         }
     };
 
+    // TODO: Probably should do like this all of them. for now I am not changing it in case we want to use immer or a reducer in the future.
     const setColorPalette = (colors: TColorPalette) => {
-        const newCarousel = deepCopy(carousel);
-        newCarousel.settings.colorPalette.font = colors.font;
-        newCarousel.settings.colorPalette.background = colors.background;
-        newCarousel.settings.colorPalette.accent = colors.accent;
-        setCarousel(newCarousel);
+        setCarousel((prev) => {
+            const newCarousel = deepCopy(prev);
+            newCarousel.settings.colorPalette.font = colors.font;
+            newCarousel.settings.colorPalette.background = colors.background;
+            newCarousel.settings.colorPalette.accent = colors.accent;
+            return newCarousel;
+        });
     };
-    const setFontPalette = (fonts: TFontPallete) => {
-        const newCarousel = deepCopy(carousel);
-        newCarousel.settings.fontPalette.primary = fonts.primary;
-        newCarousel.settings.fontPalette.secondary = fonts.secondary;
-        newCarousel.settings.fontPalette.handWriting = fonts.handWriting;
-        setCarousel(newCarousel);
+
+    const setFontPalette = (fonts: TFontPalette) => {
+        setCarousel((prev) => {
+            const newCarousel = deepCopy(prev);
+            newCarousel.settings.fontPalette.primary = fonts.primary;
+            newCarousel.settings.fontPalette.secondary = fonts.secondary;
+            newCarousel.settings.fontPalette.handWriting = fonts.handWriting;
+            return newCarousel;
+        });
     };
 
     const setCarouselAspectRatio = (aspectRatio: TAspectRatioEnum) => {
@@ -259,6 +270,13 @@ export function CarouselContextProvider({
     const setDecorationId = (decorationId: TDecorationId) => {
         const newCarousel = deepCopy(carousel);
         newCarousel.settings.backgroundPattern = decorationId;
+        setCarousel(newCarousel);
+    };
+
+    const toggleShowDecoration = () => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.showDecoration =
+            !newCarousel.settings.showDecoration;
         setCarousel(newCarousel);
     };
 
@@ -302,9 +320,46 @@ export function CarouselContextProvider({
         []
     );
 
+    const setLabelRoundness = (value: number) => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.labelRoundness = value;
+        setCarousel(newCarousel);
+    };
+
+    const toggleShowName = () => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.showName = !newCarousel.settings.showName;
+        setCarousel(newCarousel);
+    };
+
+    const toggleShowAuthorInFirstOnly = () => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.showAuthorInFirstOnly =
+            !newCarousel.settings.showAuthorInFirstOnly;
+        setCarousel(newCarousel);
+    };
+
+    const toggleShowHandle = () => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.showHandle = !newCarousel.settings.showHandle;
+        setCarousel(newCarousel);
+    };
+
+    const toggleShowProfilePic = () => {
+        const newCarousel = deepCopy(carousel);
+        newCarousel.settings.showProfilePic =
+            !newCarousel.settings.showProfilePic;
+        setCarousel(newCarousel);
+    };
+
     return (
         <CarouselContext.Provider
             value={{
+                toggleShowAuthorInFirstOnly,
+                toggleShowHandle,
+                toggleShowProfilePic,
+                setLabelRoundness,
+                toggleShowName,
                 arrayOfRefs,
                 addRef,
                 currentSlide,
@@ -320,6 +375,7 @@ export function CarouselContextProvider({
                 setCurrentSlideTo,
                 toggleAlternateColors,
                 toggleShowCounter,
+                toggleShowDecoration,
                 toggleShowSwipeLabel,
                 toggleShowAuthor,
                 toggleSlideHasTitle,

@@ -49,6 +49,11 @@ export const fakeCarousel: Omit<TCarousel, 'id'> = {
     },
     swipeLabel: 'Desliza',
     settings: {
+        labelRoundness: 10,
+        showAuthorInFirstOnly: true,
+        showHandle: true,
+        showName: true,
+        showProfilePic: true,
         colorPalette: {
             background: '#000000',
             font: '#ffffff',
@@ -65,6 +70,7 @@ export const fakeCarousel: Omit<TCarousel, 'id'> = {
         showAuthor: true,
         showCounter: true,
         showSwipeLabel: true,
+        showDecoration: true,
     },
 };
 

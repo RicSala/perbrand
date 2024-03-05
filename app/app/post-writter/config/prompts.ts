@@ -31,7 +31,7 @@ export const POST_TEMPLATES: Omit<
         
         Hice esto durante 5-6 meses cuando empecé, y acabé agotado. Era mentalmente agotador.
         
-        No porque no trabajara duro.
+        No porque trabajara duro.
         
         Era porque estaba haciendo tantas cosas y todas eran muy diferentes.
         

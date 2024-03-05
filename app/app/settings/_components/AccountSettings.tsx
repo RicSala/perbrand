@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
     Form,
     FormControl,
@@ -15,6 +16,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { SettingsSectionHeader } from './SettingsSectionHeader';
 
 const generalSettingsSchema = z.object({
     name: z.string(),
@@ -24,12 +26,12 @@ type GeneralSettingsForm = z.infer<typeof generalSettingsSchema>;
 
 export const AccountSettings = () => {
     const { data } = useSession();
-    console.log('data', data);
 
     const form = useForm({
         resolver: zodResolver(generalSettingsSchema),
         defaultValues: {
             name: data?.user?.name || '',
+            image: data?.user?.image || '',
         },
     });
 
@@ -37,21 +39,19 @@ export const AccountSettings = () => {
         if (data?.user.name) {
             form.reset({
                 name: data.user.name,
+                // @ts-ignore
+                image: data.user.image,
             });
         }
     }, [data, form, form.reset]);
 
-    console.log('form', form.getValues('name'));
-
     return (
         <>
-            {form.getValues('name')}
-            {JSON.stringify(data?.user.name)}
-            <SubsectionHeading
+            <SettingsSectionHeader
                 title='Configuración general'
                 subtitle='Configura tu cuenta'
             />
-            <div className='max-w-md'>
+            <div className='max-w-md mt-4'>
                 <Form {...form}>
                     <form>
                         <FormField
@@ -59,7 +59,7 @@ export const AccountSettings = () => {
                             name='name'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Nombre</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder='Ej. Juan'
@@ -73,23 +73,31 @@ export const AccountSettings = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name='name'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nombre</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder='Ej. Juan'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type='submit' className='mt-4'>
+                            Guardar
+                        </Button>
                     </form>
                 </Form>
             </div>
         </>
-    );
-};
-
-type SubsectionHeadingProps = {
-    title: string;
-    subtitle: string;
-};
-
-const SubsectionHeading = ({ title, subtitle }: SubsectionHeadingProps) => {
-    return (
-        <div>
-            <h2 className='text-xl font-bold'>{title}</h2>
-            <p className='text-sm text-primary/40'>{subtitle}</p>
-        </div>
     );
 };

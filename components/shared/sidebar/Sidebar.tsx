@@ -247,7 +247,7 @@ const MAIN_MENU_ITEMS: MenuItem[] = [
         label: 'Ideas para post',
         href: '/app/ideas',
         shortLabel: 'Ideas',
-        status: 'próximamente',
+        status: 'active',
     },
     {
         icon: BrainCog,

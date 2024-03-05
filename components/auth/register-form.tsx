@@ -187,6 +187,22 @@ export function RegisterForm({}) {
                     }
                     Google
                 </Button>
+                <Button
+                    variant='outline'
+                    className='w-full'
+                    onClick={async () => {
+                        const res = await signIn('linkedin', {
+                            redirect: false,
+                        });
+
+                        console.log({ res });
+                    }}
+                >
+                    {
+                        //TODO: review callback después de logearse con google
+                    }
+                    Linkedin
+                </Button>
             </div>
         </div>
     );

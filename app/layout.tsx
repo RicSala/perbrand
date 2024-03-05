@@ -29,7 +29,9 @@ export default function RootLayout({
                     >
                         <AppProvider>{children}</AppProvider>
                     </Theme>
-                    <Toaster />
+                    <Toaster
+                    // richColors
+                    />
                 </body>
             </SessionProvider>
         </html>

@@ -6,6 +6,7 @@ const mailgun = new Mailgun(formData);
 
 const mg = mailgun.client({
     username: 'api',
+    url: 'https://api.mailgun.net',
     // TODO: This should not be public
     key: process.env.NEXT_PUBLIC_MAILGUN_API_KEY!,
 });

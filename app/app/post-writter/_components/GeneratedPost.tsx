@@ -1,43 +1,36 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { Edit, GalleryHorizontal, LucideIcon, Save } from 'lucide-react';
+import { GalleryHorizontal, Save } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { PostWritterContext } from './PostWritterProvider';
 import { useSession } from 'next-auth/react';
-import { Pure } from '@/types/types';
-import { LinkedinPost } from '@prisma/client';
-import { createLinkedinPost } from '@/app/_actions/writter-actions';
+import {
+    createLinkedinCarousel,
+    createLinkedinPost,
+} from '@/app/_actions/writter-actions';
 import { ButtonWithTooltip } from '@/components/shared/ButtonWithTooltip';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
-import { set } from 'zod';
+import { CreateCarouselButton } from '@/components/shared/CreateCarouselButon';
+import { useRouter } from 'next/navigation';
+import { TStatus } from '@/types/types';
+import { Progress } from '@/components/ui/progress';
+import useDeterminedProgressBar from '@/hooks/use-determined-progressbar';
 
 type GeneratedPostProps = {
     className?: string;
     isEditable?: boolean;
 };
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
-
 export const PostWritterResult = ({
     className,
     isEditable = false,
 }: GeneratedPostProps) => {
-    const { data } = useSession();
-
-    const [status, setStatus] = useState<Status>('idle');
+    const [status, setStatus] = useState<TStatus>('idle');
     const { post, setPost } = useContext(PostWritterContext);
     const [isEditableOverride, setIsEditableOverride] = useState(false);
 
@@ -49,7 +42,9 @@ export const PostWritterResult = ({
         );
     return (
         <div className={cn(``, className)}>
+            {/* <EmojiPickerClient /> */}
             <Label>Post generado</Label>
+
             <div className='border border-muted p-2 space-y-2'>
                 <div className='relative'>
                     <Textarea
@@ -72,26 +67,16 @@ export const PostWritterResult = ({
 
                 <div className='flex gap-2'>
                     <ButtonWithTooltip
-                        icon={Save}
+                        icon={<Save />}
+                        className='flex-1 rounded-full bg-muted text-primary/50
+                        hover:bg-primary/10'
                         label='Guardar post'
                         onClick={async () => {
                             await createLinkedinPost(post.content, post.id);
                             toast('Post guardado');
                         }}
                     />
-                    {/* <ButtonWithTooltip
-                        className={
-                            isEditable || isEditableOverride
-                                ? 'bg-green-300'
-                                : 'bg-red-300'
-                        }
-                        icon={Edit}
-                        label='Editar post'
-                    /> */}
-                    <ButtonWithTooltip
-                        icon={GalleryHorizontal}
-                        label='Crear carrusel'
-                    />
+                    <CreateCarouselButton post={post} />
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import { Heading } from '@/components/shared/Heading';
 import { db } from '@/lib/prisma';
 import { PostCard } from './_components/PostCard';
 import { SavedPageClient } from './_components/SavedPageClient';
+import { getSession } from 'next-auth/react';
 
 const findPostByUserId = async () => {
     return db.linkedinPost.findMany({
@@ -27,9 +28,20 @@ const findCarruselsByUserId = async () => {
     });
 };
 
+const findIdeasByUserId = async () => {
+    return db.idea.findMany({
+        where: {
+            author: {
+                name: 'Ricardo',
+            },
+        },
+    });
+};
+
 export default async function IdeasPage() {
     const userPosts = await findPostByUserId();
     const userCarrusels = await findCarruselsByUserId();
+    const userIdeas = await findIdeasByUserId();
 
     return (
         <div>
@@ -40,7 +52,11 @@ export default async function IdeasPage() {
             />
             <Separator />
 
-            <SavedPageClient posts={userPosts} carrusels={userCarrusels} />
+            <SavedPageClient
+                posts={userPosts}
+                carrusels={userCarrusels}
+                ideas={userIdeas}
+            />
         </div>
     );
 }
