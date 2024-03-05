@@ -12,8 +12,6 @@ import { createLinkedinPost } from '@/app/_actions/writter-actions';
 import { ButtonWithTooltip } from '@/components/shared/ButtonWithTooltip';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
-import EmojiPicker from 'emoji-picker-react';
-import { EmojiPickerClient } from '@/components/shared/EmojiPickerClient';
 
 type GeneratedPostProps = {
     className?: string;
@@ -40,8 +38,9 @@ export const PostWritterResult = ({
         );
     return (
         <div className={cn(``, className)}>
-            <EmojiPickerClient />
+            {/* <EmojiPickerClient /> */}
             <Label>Post generado</Label>
+
             <div className='border border-muted p-2 space-y-2'>
                 <div className='relative'>
                     <Textarea

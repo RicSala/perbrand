@@ -3,6 +3,7 @@
 import { Heading } from '@/components/shared/Heading';
 import { Separator } from '@/components/ui/separator';
 import { IdeasPageClient } from './IdeasPageClient';
+import Editor from '@/components/editor/editor';
 
 export default function IdeasPage() {
     return (
@@ -14,6 +15,7 @@ export default function IdeasPage() {
             />
             <Separator />
             <IdeasPageClient />
+            <Editor />
         </div>
     );
 }
