@@ -1,7 +1,7 @@
 import { Faq } from '@/components/marketing/faq';
 import { Pricing } from '@/components/marketing/pricing';
 import CtaWithSocial from '@/components/marketing/cta-with-social';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 import { secondaryFont } from '@/config/fonts';
 import Hero from '@/components/marketing/hero';
 import { TextWithMedia } from '@/components/marketing/TextWithMedia';
@@ -13,7 +13,7 @@ import { VideoClient } from '@/components/marketing/VideoClient';
 import Highlight from '@/components/utils/Hightlight';
 
 export default async function Home() {
-    const session = await auth();
+    // const session = await auth();
 
     return (
         <div className={`gap flex flex-col items-center justify-between`}>

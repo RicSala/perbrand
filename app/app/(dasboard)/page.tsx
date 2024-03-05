@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 import { Heading } from '@/components/shared/Heading';
 import {
     Card,
@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
 export default async function Home() {
-    const session = await auth();
+    // const session = await auth();
 
     return (
         <>

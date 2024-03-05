@@ -24,23 +24,40 @@ export const authOptions = {
         // LinkedIn recently changed their OAuth flow which is why there is a bit extra code
         // LinkedIn recently changed their OAuth flow which is why there is a bit extra code
         LinkedInProvider({
-            clientId: process.env.LINKEDIN_CLIENT_ID,
-            clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-            authorization: {
-                params: { scope: 'openid profile email' },
+          clientId: process.env.LINKEDIN_CLIENT_ID,
+          clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+          client: { token_endpoint_auth_method: "client_secret_post" },
+          scope: "r_liteprofile r_emailaddress",
+          issuer: "https://www.linkedin.com",
+          userinfo: {
+            url: "https://api.linkedin.com/v2/userinfo",
+          },
+          tokenUri: "https://www.linkedin.com/oauth/v2/accessToken",
+          wellKnown:
+            "https://www.linkedin.com/oauth/.well-known/openid-configuration",
+          authorization: {
+            url: "https://www.linkedin.com/oauth/v2/authorization",
+            params: {
+              scope: "profile email openid",
+              prompt: "consent",
+              access_type: "offline",
+              response_type: "code",
             },
-            issuer: 'https://www.linkedin.com',
-            jwks_endpoint: 'https://www.linkedin.com/oauth/openid/jwks',
-            profile(profile, tokens) {
-                const defaultImage =
-                    'https://cdn-icons-png.flaticon.com/512/174/174857.png';
-                return {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture ?? defaultImage,
-                };
-            },
+          },
+         
+          token: {
+            url: "https://www.linkedin.com/oauth/v2/accessToken",
+          },
+          jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+          async profile(profile) {
+            console.log("profile:-", profile);
+    
+            return {
+              id: profile.sub,
+              name: profile.name,
+              email: profile.email,
+            };
+          },
         }),
 
         CredentialsProvider({
@@ -126,10 +143,6 @@ export const authOptions = {
     callbacks: {
         // to control if a user is allowed to sign in.
         async signIn({ user, account, profile, email, credentials }) {
-            console.log('from signin', { user });
-            console.log('from signin', { account });
-            console.log('from signin', { profile });
-
             if (account?.provider !== 'email') return true;
 
             const userExists = await db.user.findUnique({
@@ -226,13 +239,13 @@ export const authOptions = {
     // https://next-auth.js.org/tutorials/securing-pages-and-api-routes
 } satisfies NextAuthConfig;
 
-export const {
-    handlers: { GET, POST },
-    auth,
-    signIn,
-    signOut,
-    update,
-} = NextAuth({
-    ...authMiddlewareOptions,
-    ...authOptions,
-});
+// export const {
+//     handlers: { GET, POST },
+//     auth,
+//     signIn,
+//     signOut,
+//     update,
+// } = NextAuth({
+//     ...authMiddlewareOptions,
+//     ...authOptions,
+// });
