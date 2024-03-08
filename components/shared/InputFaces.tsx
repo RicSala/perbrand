@@ -22,6 +22,7 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
 
       <li
         className='relative'
+        //added on click on list items
         onClick={() => {
           setValue('no')
         }}
@@ -33,6 +34,8 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
           name='emoji-rate-options'
           checked={value === 'no'}
           value='no'
+          //on change was not triggering the setFeedbackValue coming in setValue prop
+
           // onChange={(e) => {
           //   console.log('value clicked')
           //   setValue('no')
@@ -116,6 +119,7 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
       <li
         className='relative'
         onClick={(e: any) => {
+          //added on click on list items
           setValue('partially')
         }}
       >
@@ -125,6 +129,8 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
           type='radio'
           name='emoji-rate-options'
           value='partially'
+          //on change was not triggering the setFeedbackValue coming in setValue prop
+
           // onChange={(e) => {
           //   console.log(e.target.value)
           //   setValue(e.target.value as TFeedback)
@@ -217,6 +223,7 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
       <li
         className='relative'
         onClick={() => {
+          //added on click on list items
           setValue('yes')
         }}
       >
@@ -227,6 +234,8 @@ export const InputFaces = ({ value, setValue, className }: InputFacesProps) => {
           name='emoji-rate-options'
           checked={value === 'yes'}
           value='yes'
+          //on change was not triggering the setFeedbackValue coming in setValue prop
+
           // onChange={(e) => {
           //   console.log(e.target.value, '=====e.target yes')
           //   setValue(e.target.value as TFeedback)
