@@ -1,6 +1,6 @@
 'use client';
 import { TDecorationId } from '@/types/types';
-import { Decoration, decorationMap } from '../Decoration';
+import { SlideDecoration, decorationMap } from '../slideParts/SlideDecoration';
 import { Button } from '@/components/ui/button';
 import { ToggleableCollapsible } from '@/components/shared/ToggleableCollapsible';
 import { ChevronDown } from 'lucide-react';
@@ -59,7 +59,7 @@ export function DecorationSelector({
                                                 setIsDialogOpen(false);
                                             }}
                                         >
-                                            <Decoration
+                                            <SlideDecoration
                                                 decorationid={
                                                     decoration as TDecorationId
                                                 }

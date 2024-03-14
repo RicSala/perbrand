@@ -7,7 +7,7 @@ declare module 'next-auth' {
      */
     export interface Session {
         user: {
-            role: string;
+            // role: string;
             id: string;
         } & DefaultSession['user'];
     }
@@ -18,7 +18,7 @@ declare module 'next-auth' {
      * or the second parameter of the `session` callback, when using a database.
      */
     interface User extends DefaultUser {
-        role: string;
+        // role: string;
         id: string;
     }
     /**
@@ -34,7 +34,7 @@ declare module '@auth/core/jwt' {
     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
     interface JWT {
         /** OpenID ID Token */
-        role: string;
+        // role: string;
         id: string;
     }
 }

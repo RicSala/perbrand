@@ -14,12 +14,19 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { TSlide, TStatus } from '@/types/types';
+import { TBrand, TSlide, TStatus } from '@/types/types';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { getPexelImages } from '@/app/_actions/writter-actions';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { SlideDesignSelector } from './SlideDesignSelector';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 
 type SlideSettingsProps = {
     isActive?: boolean;
@@ -44,6 +51,8 @@ export function SlideSettings({
         carousel,
         toggleShowSwipeLabel,
         setBackgroundImage,
+        getCompleteBrand,
+        setDesign,
     } = useContext(CarouselContext);
     const [query, setQuery] = useState<string>('');
     const [photoUrls, setPhotoUrls] = useState<string[]>([]);
@@ -81,10 +90,22 @@ export function SlideSettings({
                 <ArrowLeftIcon />
             </Button>
             <h2>Slide portada</h2>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button>Elige plantilla</Button>
+                </DialogTrigger>
+                <DialogContent className='max-w-[80%] overflow-x-auto'>
+                    <SlideDesignSelector
+                        brand={getCompleteBrand() as TBrand}
+                        designId='ListSlide'
+                        setDesignId={setDesign}
+                    />
+                </DialogContent>
+            </Dialog>
             <div>
                 <Switch
                     id='title'
-                    checked={slide.title.isShown}
+                    checked={slide.title!.isShown}
                     onCheckedChange={toggleSlideHasTitle}
                 />
                 <Label htmlFor='title'>Título</Label>
@@ -92,7 +113,7 @@ export function SlideSettings({
             <div>
                 <Switch
                     id='tagline'
-                    checked={slide.tagline.isShown}
+                    checked={slide.tagline!.isShown}
                     onCheckedChange={toggleSlideHasTagline}
                 />
                 <Label htmlFor='tagline'>Tagline</Label>
@@ -101,7 +122,7 @@ export function SlideSettings({
                 <Label htmlFor='paragraph'>Párrafo 1</Label>
                 <Switch
                     id='tagline'
-                    checked={slide.paragraphs[0].isShown}
+                    checked={slide.paragraphs[0]?.isShown}
                     onCheckedChange={toggleSlideHasParagraph}
                 />
             </div>

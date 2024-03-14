@@ -13,14 +13,24 @@ import { ChatOpenAI } from '@langchain/openai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { promptGenerateCarousel } from '../app/saved/prompts';
 import { StructuredOutputParser } from 'langchain/output_parsers';
-import { SlideSchemaPrompt } from '@/types/schemas';
+import {
+    BigNumberSlideSchema,
+    CallToActionSlideSchema,
+    CoverSlideSchema,
+    ListSlideSchema,
+    OnlyTextSlideSchema,
+    SlideSchemaPrompt,
+} from '@/types/schemas';
 import { RunnableSequence } from '@langchain/core/runnables';
 import image from 'next/image';
 import axios from 'axios';
+import { z } from 'zod';
 
 export async function createLinkedinPost(post: string, id: string) {
     let linkedinPost: TLinkedinPost;
+    console.log('Guardando post');
     if (id === 'new') {
+        console.log('El post es nuevo');
         linkedinPost = await db.linkedinPost.create({
             data: {
                 content: post,
@@ -32,6 +42,7 @@ export async function createLinkedinPost(post: string, id: string) {
             },
         });
     } else {
+        console.log('El post es existente');
         linkedinPost = await db.linkedinPost.update({
             where: {
                 id: id,
@@ -66,6 +77,7 @@ export async function deleteCarousel(carouselId: string) {
 }
 
 export async function createLinkedinCarousel(post: TLinkedinPost) {
+    console.log('post!!!', post);
     const model = new ChatOpenAI({
         temperature: 0.8,
         modelName: 'gpt-4-0613',
@@ -81,7 +93,19 @@ export async function createLinkedinCarousel(post: TLinkedinPost) {
 
     const promptTemplate = PromptTemplate.fromTemplate(promptGenerateCarousel);
 
-    const parser = StructuredOutputParser.fromZodSchema(SlideSchemaPrompt);
+    const parser = StructuredOutputParser.fromZodSchema(
+        z
+            .array(
+                z.union([
+                    BigNumberSlideSchema,
+                    OnlyTextSlideSchema,
+                    ListSlideSchema,
+                    CallToActionSlideSchema,
+                    CoverSlideSchema,
+                ])
+            )
+            .max(15)
+    );
 
     const chain = RunnableSequence.from([promptTemplate, model, parser]);
 
@@ -97,29 +121,39 @@ export async function createLinkedinCarousel(post: TLinkedinPost) {
         );
 
     const generatedSlides = await retryAsyncFunction(fn, 3, 1000);
+    console.log('SLIDES!!!!', generatedSlides);
 
-    const formattedSlides = generatedSlides.map((slide) => {
+    const formattedSlides: TSlide[] = generatedSlides.map((slide) => {
         return {
             title: {
                 content: slide.title,
                 isShown: true,
             },
-            paragraphs: [
-                {
-                    content: slide.paragraph,
-                    isShown: true,
-                },
-            ],
+            // @ts-ignore
+            // TODO: how can we fix this?
+            paragraphs: slide.paragraphs
+                ? // @ts-ignore
+                  slide.paragraphs.map((paragraph: any) => {
+                      return { content: paragraph, isShown: true };
+                  })
+                : [],
+
             tagline: {
-                content: '',
+                // @ts-ignore
+                content: slide.tagline ?? '',
                 isShown: false,
             },
             backgroundImage: {
                 alt: '',
                 opacity: 0.1,
-                position: 'center',
+                position: 'CENTER',
                 url: '',
             },
+            settings: null,
+            // @ts-ignore
+            bigCharacter: slide.bigCharacter ?? null,
+            image: null,
+            design: slide.design,
         };
     });
 

@@ -2,20 +2,20 @@ import { cn } from '@/lib/utils';
 import { TColorPalette, TMode } from '@/types/types';
 import { number } from 'zod';
 
-type ProgressBarProps = {
+type SlideProgressBarProps = {
     colorPalette: TColorPalette;
     numberOfSlides: number;
     currentSlide: number;
     mode: TMode;
     className?: string;
 };
-export function ProgressBar({
+export function SlideProgressBar({
     colorPalette,
     numberOfSlides,
     currentSlide,
     mode,
     className,
-}: ProgressBarProps) {
+}: SlideProgressBarProps) {
     return (
         <div
             className={cn(
@@ -26,7 +26,7 @@ export function ProgressBar({
             <div
                 style={{
                     backgroundColor: colorPalette.accent,
-                    width: `${(currentSlide / numberOfSlides) * 100}%`,
+                    width: `${(currentSlide / (numberOfSlides - 1)) * 100}%`,
                 }}
             />
             <div />

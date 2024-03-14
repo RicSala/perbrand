@@ -1,14 +1,14 @@
 import { CarouselContextProvider } from '../_components/ContextProvider';
 import Container from '@/components/shared/container';
 import { CarouselSidebar } from '../_components/sidebar/Sidebar';
-import { CarouselWorkbench } from '../_components/Workbench';
 import { Heading } from '@/components/shared/Heading';
 import { fakeCarousel } from '../_components/const';
 import { TCarousel } from '@/types/types';
 import { getSession } from 'next-auth/react';
 import { getBrandsByUserId } from '@/app/_actions/shared-actions';
-import { auth } from '@/auth';
-import { WorkbenchTest } from '../../better-carousel/components/WorkbenchTest';
+import { authOptions } from '@/auth';
+import { CarouselWorkbench } from '../_components/CarouselWorkbench';
+import { Session, getServerSession } from 'next-auth';
 
 /* TODO: Can we get a better aproach to stretch an element that is inside a flex container without making it this rigid? 
             Right now, it depends on the size of the scrollbar, which is not ideal...
@@ -24,7 +24,7 @@ type props = {
 };
 
 export default async function CarouselPage({ params }: props) {
-    const session = await auth();
+    const session: Session | null = await getServerSession(authOptions);
 
     const userBrands = await getBrandsByUserId(session?.user.id!);
 
@@ -59,7 +59,7 @@ export default async function CarouselPage({ params }: props) {
                     className={`flex md:flex-row flex-col border-t flex-wrap w-full border-0 border-re-500 grow`}
                 >
                     <CarouselSidebar brands={userBrands} />
-                    <WorkbenchTest />
+                    <CarouselWorkbench />
                 </div>
             </CarouselContextProvider>
         </>

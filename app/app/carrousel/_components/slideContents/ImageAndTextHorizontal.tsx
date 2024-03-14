@@ -1,13 +1,14 @@
 import { TBrand, TOrientation } from '@/types/types';
 import Image from 'next/image';
-import { GradientBlob } from '../GradientBlob';
+import { SlideGradientBlob } from '../slideParts/SlideGradientBlob';
 import { ArrowLeftIcon, ArrowRight } from 'lucide-react';
+import ContentEditable from 'react-contenteditable';
 
 type ImageAndTextVertical = {
     brand: TBrand;
     title: string;
     description: string;
-    imageUrl: string;
+    image: string;
     imageLocation?: 'left' | 'right';
 };
 
@@ -15,7 +16,7 @@ export const ImageAndTextHorizontal = ({
     brand,
     title,
     description,
-    imageUrl,
+    image,
     imageLocation = 'right',
 }: ImageAndTextVertical) => {
     const ArrowElement = imageLocation === 'right' ? ArrowRight : ArrowLeftIcon;
@@ -49,7 +50,7 @@ export const ImageAndTextHorizontal = ({
                 }}
             >
                 <div className='relative w-fit'>
-                    <GradientBlob brand={brand} className='blur-3xl' />
+                    <SlideGradientBlob brand={brand} className='blur-3xl' />
                     <div
                         className='relative h-44 overflow-hidden w-44'
                         style={{
@@ -57,7 +58,7 @@ export const ImageAndTextHorizontal = ({
                         }}
                     >
                         <Image
-                            src={imageUrl}
+                            src={image}
                             alt='image'
                             fill
                             className='object-cover h-full'

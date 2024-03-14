@@ -2,14 +2,19 @@ import { Heading } from '@/components/shared/Heading';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AccountSettings } from './_components/AccountSettings';
-import { auth } from '@/auth';
 import { IASettings } from './_components/IASettings';
 import { BrandKitsSettings } from './_components/BrandKitsSettings';
 import { getUserBrandKits } from '@/app/_actions/settings-actions';
-import { getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { Session, getServerSession } from 'next-auth';
+import { authOptions } from '@/auth';
 
 export default async function IdeasPage() {
-    const session = await auth();
+    const session: Session | null = await getServerSession(authOptions);
+
+    if (!session) {
+        signIn();
+    }
 
     const userBrandKits = await getUserBrandKits(session!.user.id);
     return (

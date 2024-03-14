@@ -5,7 +5,7 @@ type ImageAndTextVertical = {
     brand: TBrand;
     title: string;
     description: string;
-    imageUrl: string;
+    image: string;
     imageFirst?: boolean;
 };
 
@@ -13,7 +13,7 @@ export const ImageAndTextVertical = ({
     brand,
     title,
     description,
-    imageUrl,
+    image,
     imageFirst = false,
 }: ImageAndTextVertical) => {
     return (
@@ -26,7 +26,7 @@ export const ImageAndTextVertical = ({
                 }}
             >
                 <Image
-                    src={imageUrl}
+                    src={image}
                     alt='image'
                     fill
                     className='object-cover h-full'

@@ -13,7 +13,6 @@ import { Features } from '@/components/marketing/features';
 import Laurels from '@/components/marketing/laurels';
 import { Newsletter } from '@/components/marketing/newsletter';
 import CtaWithSocial from '@/components/marketing/cta-with-social';
-import { auth } from '@/auth';
 import { LoginButton } from '@/components/auth/login-button';
 import { SlidingElements } from '@/components/marketing/sliding-elements';
 import { Explanation } from '@/components/shared/explanation';

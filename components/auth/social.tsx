@@ -11,7 +11,9 @@ export function Social({}) {
                 variant='outline'
                 className='w-full'
                 onClick={async () => {
-                    const res = await signIn('google');
+                    const res = await signIn('google', {
+                        callbackUrl: '/app',
+                    });
 
                     console.log({ res });
                 }}
@@ -25,8 +27,9 @@ export function Social({}) {
                 variant='outline'
                 className='w-full'
                 onClick={async () => {
-                    const res = await signIn('linkedin');
-
+                    const res = await signIn('linkedin', {
+                        callbackUrl: 'http://localhost:3000/app',
+                    });
                     console.log({ res });
                 }}
             >

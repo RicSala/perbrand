@@ -1,12 +1,19 @@
 import { cn, isEven } from '@/lib/utils';
-import { TBrand, TMode, TColorPalette, TDecorationId } from '@/types/types';
+import {
+    TBrand,
+    TMode,
+    TColorPalette,
+    TDecorationId,
+    TImage,
+} from '@/types/types';
 import { ArrowRight } from 'lucide-react';
 import { ReactNode, Ref, forwardRef } from 'react';
-import { ASPECT_RATIOS_MAP } from '../../carrousel/_components/const';
-import { ProgressBar } from './ProgressBar';
-import { SlideFotter } from './SlideFotter';
-import { SlideHeader } from './SlideHeader';
-import { Decoration } from '../../carrousel/_components/Decoration';
+import { ASPECT_RATIOS_MAP } from './const';
+import { SlideProgressBar } from './slideParts/SlideProgressBar';
+import { SlideFotter } from './slideParts/SlideFotter';
+import { SlideHeader } from './slideParts/SlideHeader';
+import { SlideDecoration } from './slideParts/SlideDecoration';
+import { SlideBackground } from './slideParts/SlideBackground';
 
 export const aspectRatioClasses = {
     '4:5': 'aspect-[1080/1350]',
@@ -15,30 +22,37 @@ export const aspectRatioClasses = {
 
 export type AspectRatioKeys = keyof typeof aspectRatioClasses;
 
-type BetterSlideProps = {
+type ContentSlideLayout = {
     brand: TBrand;
     mode: TMode;
-    isActive: boolean;
-    setIsActive: (isActive: boolean) => void;
+    isActive?: boolean;
+    onClick: (arg: any) => void;
     className?: string;
     children?: ReactNode;
     currentSlide: number;
     numberOfSlides: number;
     decorationId?: TDecorationId;
+    backgroundImage?: TImage;
+    isCoverOrCTA?: boolean;
 };
 
-export const BetterSlide = forwardRef<HTMLDivElement, BetterSlideProps>(
+export const ContentSlideLayout = forwardRef<
+    HTMLDivElement,
+    ContentSlideLayout
+>(
     (
         {
             brand,
             mode,
             children,
-            isActive,
-            setIsActive,
+            isActive = false,
+            onClick: setIsActive,
             className,
             currentSlide,
             numberOfSlides,
             decorationId,
+            backgroundImage,
+            isCoverOrCTA = false,
         },
         ref
     ) => {
@@ -73,8 +87,14 @@ export const BetterSlide = forwardRef<HTMLDivElement, BetterSlideProps>(
                 }}
                 onClick={() => setIsActive(true)}
             >
-                {decorationId && (
-                    <Decoration
+                {backgroundImage && (
+                    <SlideBackground
+                        imageUrl={backgroundImage.url}
+                        opacity={backgroundImage.opacity}
+                    />
+                )}
+                {!isCoverOrCTA && decorationId && (
+                    <SlideDecoration
                         decorationid={decorationId}
                         primaryColor={colorPalette.font}
                         secondaryColor={colorPalette.background}
@@ -83,28 +103,38 @@ export const BetterSlide = forwardRef<HTMLDivElement, BetterSlideProps>(
                         even={isEven(currentSlide)}
                     />
                 )}
-                <ProgressBar
-                    colorPalette={colorPalette}
-                    currentSlide={currentSlide}
-                    numberOfSlides={numberOfSlides}
-                    mode={mode}
-                />
-                <SlideHeader text='Slide Title' slideNumber={2} className='' />
+                {!isCoverOrCTA && (
+                    <SlideProgressBar
+                        colorPalette={colorPalette}
+                        currentSlide={currentSlide}
+                        numberOfSlides={numberOfSlides}
+                        mode={mode}
+                    />
+                )}
+                {!isCoverOrCTA && (
+                    <SlideHeader
+                        text='Slide Title'
+                        slideNumber={currentSlide}
+                        className=''
+                    />
+                )}
                 {/* <p className='z-50'>ACCENT: {colorPalette.accent}</p> */}
                 {children}
-                <SlideFotter
-                    colorPalette={brand.colorPalette}
-                    fontPalette={brand.fontPalette}
-                    imageUrl={brand.imageUrl}
-                    name={brand.name}
-                    handle={brand.handle}
-                    mode={mode}
-                    swipeLabel={<ArrowRight className='h-10 w-10' />}
-                    className='absolute bottom-0 left-0 w-full p-6'
-                />
+                {!isCoverOrCTA && (
+                    <SlideFotter
+                        colorPalette={brand.colorPalette}
+                        fontPalette={brand.fontPalette}
+                        imageUrl={brand.imageUrl}
+                        name={brand.name}
+                        handle={brand.handle}
+                        mode={mode}
+                        swipeLabel={<ArrowRight className='h-10 w-10' />}
+                        className='absolute bottom-0 left-0 w-full p-6'
+                    />
+                )}
             </div>
         );
     }
 );
 
-BetterSlide.displayName = 'BetterSlide';
+ContentSlideLayout.displayName = 'ContentSlideLayout';

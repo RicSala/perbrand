@@ -4,54 +4,48 @@ import { useRef, useEffect, useContext } from 'react';
 import ContentEditable from 'react-contenteditable';
 
 type TextOnlySlideProps = {
-    text: string;
-    subtitle?: string;
+    title: string;
+    paragraphs?: string[];
 };
 
-export const TextOnlySlide = ({ text, subtitle }: TextOnlySlideProps) => {
+export const TextOnlySlide = ({ title, paragraphs }: TextOnlySlideProps) => {
+    const titleRef = useRef('');
     const paragraphRef = useRef('');
-    const { editTitle } = useContext(CarouselContext);
+    const { editTitle, editDescription, editTagline } =
+        useContext(CarouselContext);
 
+    // REVIEW: do we really need this?
     useEffect(() => {
-        paragraphRef.current = text;
-    }, [text]);
+        if (title) titleRef.current = title;
+        if (paragraphs) paragraphRef.current = paragraphs[0];
+    }, [paragraphs, title]);
 
     return (
         <div className='flex flex-col gap-2 h-full w-full z-10 justify-center -mt-6'>
             <ContentEditable
                 onChange={(event) => {
-                    console.log(event.target.value);
-                    paragraphRef.current = event.target.value;
+                    titleRef.current = event.target.value;
                     editTitle(event.target.value);
                 }}
-                html={text}
+                html={titleRef.current}
                 className='text-[2em]
                     focus:outline-none focus:ring-0 focus:border-transparent
                     '
                 // style={{
-                //     display: hasParagraph ? 'block' : 'none',
+                //     display: hasParagraphs ? 'block' : 'none',
                 // }}
                 style={{
                     fontSize: '2.5rem',
                     lineHeight: 1.1,
                 }}
             />
-            {/* <h1
-                style={{
-                    fontSize: '2.5rem',
-                    lineHeight: 1.1,
-                }}
-            >
-                {text}
-            </h1> */}
-            {subtitle && (
+            {paragraphs && (
                 <ContentEditable
                     onChange={(event) => {
-                        console.log(event.target.value);
                         paragraphRef.current = event.target.value;
-                        editTitle(event.target.value);
+                        editTagline(event.target.value);
                     }}
-                    html={subtitle}
+                    html={paragraphRef.current}
                     className='text-[1rem] focus:outline-none focus:ring-0 focus:border-transparent'
                     style={{
                         fontSize: '1rem',

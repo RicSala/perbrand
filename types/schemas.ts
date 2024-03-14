@@ -30,6 +30,94 @@ export const IdeaRequestFormSchema = z.object({
     topic: z.string().nonempty('El tema no puede estar vacío'),
 });
 
+export const OnlyTextSlideSchema = z.object({
+    title: z.string().nonempty('El título no puede estar vacío'),
+    // paragraphs should not be an array of only one item
+    paragraphs: z.array(
+        z
+            .string()
+            .nonempty(
+                'El párrafo no puede estar vacío Y DEBE TENER SOLO UN ELEMENTO!!!. Puedes crear tantas slides como quieras de este tipo, pero este tipo solo puede tener UN elemento en el array de párrafos'
+            )
+    ),
+    // tagline is not allowed
+    tagline: z.undefined().refine((data) => data === undefined, {
+        message: 'The tagline property is not allowed in a OnlyTextSlide!',
+        path: ['tagline'],
+    }),
+    design: z.enum([
+        'BigNumberSlide',
+        'TextOnlySlide',
+        'ListSlide',
+        'CallToAction',
+        'Cover',
+    ]),
+});
+
+export const BigNumberSlideSchema = z.object({
+    title: z.string().nonempty('El título no puede estar vacío'),
+    bigCharacter: z.string().nonempty('El número grande no puede estar vacío'),
+    tagline: z.string().nonempty('El tagline no puede estar vacío'),
+    design: z.enum([
+        'BigNumberSlide',
+        'TextOnlySlide',
+        'ListSlide',
+        'CallToAction',
+        'Cover',
+    ]),
+});
+
+export const ListSlideSchema = z.object({
+    title: z.string().nonempty('El título no puede estar vacío'),
+    paragraphs: z.array(
+        z.string().nonempty('El párrafo no puede estar vacío').max(20, {
+            message: 'El párrafo no puede tener más de 20 caracteres!!',
+        })
+    ),
+    design: z.enum([
+        'BigNumberSlide',
+        'TextOnlySlide',
+        'ListSlide',
+        'CallToAction',
+        'Cover',
+    ]),
+});
+
+export const CallToActionSlideSchema = z.object({
+    title: z.string().nonempty('El título no puede estar vacío'),
+    paragraphs: z
+        .array(
+            z
+                .string()
+                .nonempty(
+                    'El párrafo no puede estar vacío Y DEBE TENER SOLO UN ELEMENTO!!!. Puedes crear tantas slides como quieras de este tipo, pero este tipo solo puede tener UN elemento en el array de párrafos'
+                )
+        )
+        .refine((data) => data.length === 1, {
+            message: 'The paragraphs array must contain exactly one item',
+            path: ['paragraphs call to action'],
+        }),
+    tagline: z.string().nonempty('El tagline no puede estar vacío'),
+    design: z.enum([
+        'BigNumberSlide',
+        'TextOnlySlide',
+        'ListSlide',
+        'CallToAction',
+        'Cover',
+    ]),
+});
+export const CoverSlideSchema = z.object({
+    title: z.string().nonempty('El título no puede estar vacío'),
+    tagline: z.string().nonempty('El tagline no puede estar vacío'),
+    design: z.enum([
+        'BigNumberSlide',
+        'TextOnlySlide',
+        'ListSlide',
+        'CallToAction',
+        'Cover',
+    ]),
+});
+
 export const IdeaSchema = z.object({
     description: z
         .string()

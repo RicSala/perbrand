@@ -1,8 +1,8 @@
-type BackgroundProps = {
+type SlideBackgroundProps = {
     imageUrl: string;
     opacity?: number;
 };
-export function Background({ imageUrl, opacity }: BackgroundProps) {
+export function SlideBackground({ imageUrl, opacity }: SlideBackgroundProps) {
     return (
         <div
             className='w-full h-full absolute top-0 left-0 opacity-60'

@@ -4,10 +4,10 @@ import {
     TMode,
     TOrientation,
 } from '@/types/types';
-import { Avatar } from './Avatar';
+import { SlideAvatar } from './SlideAvatar';
 import { CSSProperties } from 'react';
 
-type ProfileCardProps = {
+type SlideProfileCardProps = {
     colorPalette: TColorPalette;
     fontPalette: TFontPalette;
     imageUrl: string;
@@ -17,7 +17,7 @@ type ProfileCardProps = {
     orientation?: TOrientation;
     mode?: TMode;
 };
-export function ProfileCard({
+export function SlideProfileCard({
     colorPalette,
     fontPalette,
     imageUrl,
@@ -26,7 +26,7 @@ export function ProfileCard({
     // children,
     orientation = 'horizontal',
     mode = 'light',
-}: ProfileCardProps) {
+}: SlideProfileCardProps) {
     const verticalStyles: CSSProperties = {
         flexDirection: 'column',
         alignItems: 'center',
@@ -44,7 +44,7 @@ export function ProfileCard({
             }
         >
             {/* {children} */}
-            <Avatar
+            <SlideAvatar
                 colorPalette={colorPalette}
                 mode={mode}
                 imageUrl={imageUrl}

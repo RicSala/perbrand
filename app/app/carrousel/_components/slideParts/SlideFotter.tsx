@@ -1,7 +1,7 @@
 import { TColorPalette, TFontPalette, TMode } from '@/types/types';
 import Image from 'next/image';
 import { ReactNode } from 'react';
-import { NameAndHandle } from './ProfileCard';
+import { NameAndHandle } from './SlideProfileCard';
 import { cn } from '@/lib/utils';
 
 type SlideFotterProps = {

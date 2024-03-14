@@ -52,6 +52,8 @@ export function RegisterForm({}) {
                 signIn('credentials', {
                     email: values.email,
                     password: values.password,
+                    redirect: false,
+                    callbackUrl: '/app',
                 });
             })
             .then(() => {
@@ -176,7 +178,7 @@ export function RegisterForm({}) {
                     className='w-full'
                     onClick={async () => {
                         const res = await signIn('google', {
-                            redirect: false,
+                            // callbackUrl: '/app',
                         });
 
                         console.log({ res });
@@ -192,7 +194,7 @@ export function RegisterForm({}) {
                     className='w-full'
                     onClick={async () => {
                         const res = await signIn('linkedin', {
-                            redirect: false,
+                            callbackUrl: 'http://localhost:3000/app',
                         });
 
                         console.log({ res });

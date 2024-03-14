@@ -1,8 +1,8 @@
-import { authMiddlewareOptions } from "./auth.middleware.config";
-import NextAuth from "next-auth";
-import { config as appConfig } from "./config/shipper.config";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { authMiddlewareOptions } from './auth.middleware.config';
+import NextAuth from 'next-auth';
+import { config as appConfig } from './config/shipper.config';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // const { auth } = NextAuth(authMiddlewareOptions);
 
 // export default auth((req) => {
@@ -40,20 +40,21 @@ export const config = {
 
 // Clerk regex
 
-
-
 export function middleware(req: NextRequest) {
-  const auth = req.cookies.get("next-auth.session-token");
-  
-  if (!auth) {
-    if (req.nextUrl.pathname.startsWith("/app")) {
-      return NextResponse.redirect(new URL("/auth/signin",req.url));
-    }
-  } else {
-    if (req.nextUrl.pathname.startsWith("/auth") || req.nextUrl.pathname.startsWith("/login")) {
-      return NextResponse.redirect(new URL("/",req.url));
-    }
-  }
+    const auth = req.cookies.get('next-auth.session-token');
 
-  return NextResponse.next();
+    if (!auth) {
+        if (req.nextUrl.pathname.startsWith('/app')) {
+            return NextResponse.redirect(new URL('/auth/signin', req.url));
+        }
+    } else {
+        if (
+            req.nextUrl.pathname.startsWith('/auth') ||
+            req.nextUrl.pathname.startsWith('/login')
+        ) {
+            return NextResponse.redirect(new URL('/', req.url));
+        }
+    }
+
+    return NextResponse.next();
 }

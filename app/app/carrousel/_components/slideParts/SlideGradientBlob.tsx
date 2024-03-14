@@ -2,17 +2,17 @@ import { cn } from '@/lib/utils';
 import { TBrand } from '@/types/types';
 import { CSSProperties } from 'react';
 
-type GradientBlobProps = {
+type SlideGradientBlobProps = {
     brand: TBrand;
     className?: string;
     style?: CSSProperties;
 };
 
-export const GradientBlob = ({
+export const SlideGradientBlob = ({
     brand,
     className,
     style,
-}: GradientBlobProps) => {
+}: SlideGradientBlobProps) => {
     return (
         <div
             className={cn(

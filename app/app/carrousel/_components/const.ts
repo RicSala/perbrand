@@ -4,10 +4,10 @@ import * as PrismaClient from '@prisma/client';
 export const fakeSlides: TSlide[] = [
     {
         backgroundImage: {
-            url: '/images/placeholders/user.png',
+            url: '',
             alt: 'some random',
             opacity: 0.1,
-            position: 'center',
+            position: 'CENTER',
         },
         paragraphs: [
             {
@@ -38,13 +38,21 @@ export const fakeSlides: TSlide[] = [
             content: 'some randum tagline',
             isShown: true,
         },
+        image: {
+            url: '',
+            alt: 'some random',
+            position: 'CENTER',
+            opacity: 0.1,
+        },
+        bigCharacter: 'R',
+        design: 'TextOnlySlide',
     },
     {
         backgroundImage: {
-            url: '/images/placeholders/user.png',
+            url: '',
             alt: 'some random',
             opacity: 0.1,
-            position: 'center',
+            position: 'CENTER',
         },
         paragraphs: [
             {
@@ -75,6 +83,14 @@ export const fakeSlides: TSlide[] = [
             content: 'some randum tagline',
             isShown: true,
         },
+        image: {
+            url: '',
+            alt: 'some random',
+            position: 'CENTER',
+            opacity: 0.1,
+        },
+        bigCharacter: 'R',
+        design: 'TextOnlySlide',
     },
 ];
 

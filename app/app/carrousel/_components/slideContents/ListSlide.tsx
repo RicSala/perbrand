@@ -1,28 +1,40 @@
 import { TBrand } from '@/types/types';
+import { useContext } from 'react';
+import { CarouselContext } from '../ContextProvider';
+import ContentEditable from 'react-contenteditable';
 
 type ListSlideProps = {
     brand: TBrand;
-    list: string[];
+    title: string;
+    paragraphs: string[];
 };
 
-export const ListSlide = ({ brand, list }: ListSlideProps) => {
+export const ListSlide = ({ brand, paragraphs, title }: ListSlideProps) => {
+    const { editTitle, editDescription } = useContext(CarouselContext);
+
     return (
-        <div className='flex flex-col gap-4 h-full p-4'>
-            <h1
+        <div className='flex flex-col gap-4 h-full p-4 z-10'>
+            <ContentEditable
+                onChange={(event) => {
+                    editTitle(event.target.value);
+                }}
+                html={`<h1>${title}</h1>`}
+                className='text-[2em]
+                    focus:outline-none focus:ring-0 focus:border-transparent
+                    '
                 style={{
                     fontSize: '3rem',
                     lineHeight: 1,
                 }}
-            >
-                We are Here!
-            </h1>
+            />
+
             <ul
                 className='px-6 flex flex-col gap-2'
                 style={{
                     fontWeight: 300,
                 }}
             >
-                {list.map((item, index) => {
+                {paragraphs.map((item, index) => {
                     return (
                         <li key={index}>
                             <div

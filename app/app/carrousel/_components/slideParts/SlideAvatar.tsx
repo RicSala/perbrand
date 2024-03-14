@@ -1,12 +1,16 @@
 import { TColorPalette, TMode } from '@/types/types';
 import Image from 'next/image';
 
-type AvatarProps = {
+type SlideAvatarProps = {
     mode: TMode;
     imageUrl: string;
     colorPalette: TColorPalette;
 };
-export function Avatar({ mode, imageUrl, colorPalette }: AvatarProps) {
+export function SlideAvatar({
+    mode,
+    imageUrl,
+    colorPalette,
+}: SlideAvatarProps) {
     return (
         <div
             className='relative rounded-full border-4 w-24 aspect-square overflow-hidden'

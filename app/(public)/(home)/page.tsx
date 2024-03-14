@@ -1,7 +1,6 @@
 import { Faq } from '@/components/marketing/faq';
 import { Pricing } from '@/components/marketing/pricing';
 import CtaWithSocial from '@/components/marketing/cta-with-social';
-import { auth } from '@/auth';
 import { secondaryFont } from '@/config/fonts';
 import Hero from '@/components/marketing/hero';
 import { TextWithMedia } from '@/components/marketing/TextWithMedia';
