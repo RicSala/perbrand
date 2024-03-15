@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
             const minutes = Number(post?.time?.split(':')[1]);
 
             if (
-                currentDate === post?.date &&
+                currentDate?.getDate() === post?.date?.getDate() &&
                 currentDate?.getHours() === hours &&
                 currentDate?.getMinutes() === minutes
             ) {
